@@ -1,9 +1,7 @@
 # Security policy
 
-## Reporting a vulnerability
+These are internal Swapfiets repositories. If you find a security issue in any of them, do not open a public issue or post details in a shared channel.
 
-Please do not open a public issue for security problems.
+Report it to the **Data & AI Platform team** (or your security point of contact) so it can be triaged and fixed. You can also use GitHub's private vulnerability reporting on the affected repository: its **Security** tab, then **Report a vulnerability**.
 
-Report a vulnerability privately through GitHub's private vulnerability reporting on the affected repository: open its **Security** tab and choose **Report a vulnerability**. If that is unavailable, contact the Data & AI Platform team directly.
-
-Include the affected repository, a description of the issue, and steps to reproduce. We aim to acknowledge reports within a few working days and will keep you updated on the fix.
+Include the affected repository, what the issue is, and how to reproduce it.
