@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📊 Data, metric or dashboard question
+    url: https://github.com/swapfiets-tech/data-support-requests/issues/new/choose
+    about: Questions about data, metrics, dashboards, or a suspected data-quality issue go to the data support intake (or ask in the data support Slack channel), not here. An analyst triages these daily.
