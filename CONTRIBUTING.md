@@ -13,3 +13,12 @@ Conventions for working in the Data & AI team's repositories.
 ## Reviews
 
 PRs need an approving review before merging. Code owners (see each repo's CODEOWNERS) are requested automatically.
+
+## Repository standards
+
+Our repositories share a few conventions:
+
+- **CODEOWNERS** are generated from Terraform (the owning team's `maintain_repositories` in `swapfiets-terraform`), not hand-edited. Change ownership there.
+- **`.gitignore`** keeps a `/temp/` section for personal scratch space (local notes, never committed).
+- Each repo keeps a concise **`CLAUDE.md`** / developer guide at its root.
+- Repository settings (branch protection, squash-merge, Dependabot) are managed in Terraform, not in the GitHub UI.
