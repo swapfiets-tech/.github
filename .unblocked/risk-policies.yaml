@@ -1,0 +1,136 @@
+# Unblocked Code Review risk policies for swapfiets-tech/.github.
+# Docs: https://docs.getunblocked.com/code-review/risk-assessment
+# Unblocked reads this file from the DEFAULT branch (main), not from the PR
+# under review, so it only takes effect once merged. When several policies
+# match, the highest risk level is applied.
+
+context: >
+  This is Swapfiets' organization-level `.github` repository. It is PUBLIC and
+  world-readable (secret scanning + push protection are enabled precisely
+  because everything here is visible to anyone). It holds no application code:
+  only org-wide GitHub defaults and content.
+
+  What lives here and how a merge reaches "production": there is no build, CI,
+  or deploy step. A PR merges to the protected `main` branch and GitHub
+  immediately serves the changed files.
+  - profile/README.md is the PUBLIC org landing page shown at
+    github.com/swapfiets-tech — a mistake here is visible to the whole world.
+  - Root community health files (SECURITY.md, CONTRIBUTING.md,
+    CODE_OF_CONDUCT.md, GOVERNANCE.md, SUPPORT.md) are served by GitHub as the
+    DEFAULT for every org repository that lacks its own, so a change propagates
+    org-wide.
+  - .github/ISSUE_TEMPLATE/*.yml and config.yml are the org-wide default issue
+    forms and routing; config.yml routes data/metric/dashboard questions to the
+    data-support-requests intake and toggles blank issues.
+  - .github/pull_request_template.md and .github/CODEOWNERS apply to this repo.
+
+  Blast radius is public exposure + org-wide inheritance, not data or infra.
+  The gravest risk is committing anything non-public into a world-readable repo:
+  secrets, or internal infrastructure identifiers (AWS account IDs, role/
+  resource ARNs, cluster/host names, internal endpoints). Reusable workflows and
+  CI/deploy details are deliberately kept OUT of this repo (in the private
+  swapfiets-actions repo) for exactly this reason. The security disclosure
+  policy is a functional org-wide surface: a wrong contact silently misroutes
+  real vulnerability reports. Repository settings, branch protection, and
+  CODEOWNERS ownership are managed as code in swapfiets-terraform, not
+  hand-edited here. No secret, token, private key, password, or connection
+  string belongs anywhere in this repo. When in doubt, pick the higher risk.
+
+policies:
+  - policy: Committed secrets or credentials
+    risk: highest
+    criteria: >
+      The PR introduces a hardcoded secret anywhere in the repository — an API
+      key, access token, OAuth/PAT credential, private key, password, or a
+      database/warehouse connection string with embedded credentials — in any
+      file (Markdown, YAML, or otherwise). This repo is PUBLIC and world-
+      readable, so any committed secret is immediately exposed; secret scanning
+      and push protection are a backstop, not a substitute for catching this in
+      review. Secrets belong in GitHub Secrets or AWS SSM, never in the repo.
+
+  - policy: Internal or non-public detail in a public repo
+    risk: highest
+    criteria: >
+      The PR adds non-public internal information to any file in this
+      world-readable repository: AWS account IDs, role or resource ARNs,
+      cluster/host names, internal-only URLs or endpoints, infrastructure or
+      CI/deploy details, private repository internals, or employee personal
+      data. This is the exact reason reusable workflows and CI details are kept
+      out of `.github` and live in the private swapfiets-actions repo. Anything
+      that would leak internal specifics to the public is highest risk.
+
+  - policy: Security disclosure policy changes
+    risk: high
+    criteria: >
+      The PR changes SECURITY.md — the vulnerability-reporting contacts
+      (rd@pon.com, security@pon.com), the responsible-disclosure URL, or the
+      private-reporting instructions. GitHub serves this as the org-wide default
+      security policy for every repo without its own, so a wrong or broken
+      contact or link silently misroutes real vulnerability reports across the
+      organization. Failure is silent and security-relevant, so it needs human
+      review.
+
+  - policy: Public org profile page
+    risk: medium
+    criteria: >
+      The PR changes profile/README.md (or anything under profile/), which is
+      the PUBLIC org landing page rendered at github.com/swapfiets-tech. Content
+      here is world-visible and reputational, and a careless edit can expose
+      internal detail or misrepresent the org, so it should get human eyes
+      rather than auto-merge. (Adding actual internal identifiers or secrets
+      here escalates to the highest policies above.)
+
+  - policy: Org-wide issue and PR templates
+    risk: medium
+    criteria: >
+      The PR changes the org-wide default templates: .github/ISSUE_TEMPLATE/
+      bug_report.yml or feature_request.yml (form fields, ids, labels, required
+      validations), config.yml (blank_issues_enabled, or the contact_links
+      routing to the data-support-requests intake), or
+      .github/pull_request_template.md structure. These are inherited by repos
+      without their own and are functional: malformed form YAML breaks issue
+      creation and a wrong contact link misroutes contributors. Pure copy-only
+      wording tweaks are low, but structural or routing changes are medium.
+
+  - policy: Org-wide support routing links
+    risk: medium
+    criteria: >
+      The PR changes a routing target in SUPPORT.md: the data-support-requests
+      intake URL, the AccessOwl access-request path, or any other contact/link
+      that tells people where to send support, data-quality, or access requests.
+      GitHub serves SUPPORT.md as the org-wide default for every repo without
+      its own, and this is the same intake routing that config.yml points at, so
+      a wrong or broken target silently misroutes real requests org-wide. Failure
+      is silent, so it needs human review even though the blast radius is smaller
+      than SECURITY.md. Pure wording changes with the routing links untouched are
+      low.
+
+  - policy: CODEOWNERS and review governance
+    risk: medium
+    criteria: >
+      The PR edits .github/CODEOWNERS, which controls who is required to review
+      and approve PRs in this repository. By convention CODEOWNERS is generated
+      from the owning team's maintain_repositories in swapfiets-terraform and is
+      not hand-edited, so a change here is both a review-gating change and
+      likely drift from the source of truth. It needs human review.
+
+  - policy: Org-wide community health prose
+    risk: low
+    criteria: >
+      The PR only edits the human-readable prose of the org-wide community
+      health documents CONTRIBUTING.md, CODE_OF_CONDUCT.md, GOVERNANCE.md, or
+      SUPPORT.md — wording and process descriptions — with no change to any
+      SUPPORT.md routing target (the data-support-requests intake URL, the
+      AccessOwl access path, or other support/access contact links; those are
+      medium), no change to SECURITY.md, no change to profile/, no template or
+      CODEOWNERS change, and no addition of secrets or internal identifiers.
+      These are non-behavioral internal process docs and are safe to fast-track.
+
+  - policy: Repo-local docs, comments, and metadata only
+    risk: lowest
+    criteria: >
+      The PR only changes this repository's own inert content: README.md,
+      CLAUDE.md, code comments, .gitignore, or the comments in this
+      .unblocked/risk-policies.yaml file. These affect neither the public
+      profile, the org-wide defaults, nor any routing or governance, and cannot
+      expose anything, so they are safe to fast-track.
