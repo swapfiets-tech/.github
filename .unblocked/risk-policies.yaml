@@ -62,8 +62,8 @@ policies:
   - policy: Security disclosure policy changes
     risk: high
     criteria: >
-      The PR changes SECURITY.md — the vulnerability-reporting contacts
-      (rd@pon.com, security@pon.com), the responsible-disclosure URL, or the
+      The PR changes SECURITY.md — the vulnerability-reporting contact
+      (security@swapfiets.com), the responsible-disclosure URL, or the
       private-reporting instructions. GitHub serves this as the org-wide default
       security policy for every repo without its own, so a wrong or broken
       contact or link silently misroutes real vulnerability reports across the
